@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Shoot : MonoBehaviour
 {
+    // ----- GameObjects -----
     [SerializeField]
     GameObject bow;
     [SerializeField]
@@ -24,6 +25,7 @@ public class Shoot : MonoBehaviour
     void Start()
     {
         SpawnArrow();
+        MainPanel.UpdateNbArrowText(numberOfArrows);
     }
 
     // Update is called once per frame
@@ -45,35 +47,36 @@ public class Shoot : MonoBehaviour
 
     void ShootArrow()
     {
-        if (numberOfArrows > 0)
+        // If player is holding left click and the bow isn't fully bended
+        if (Input.GetMouseButton(0) && pullAmount < 100)
         {
-            SkinnedMeshRenderer _bowSkin = bow.GetComponent<SkinnedMeshRenderer>();
-            SkinnedMeshRenderer _arrowSkin = arrow.GetComponent<SkinnedMeshRenderer>();
+            pullAmount += Time.deltaTime * pullSpeed;
+            Mathf.Clamp(pullAmount, 0, 100);
+
+            // Set BlendShape value of bow and arrow to the new "pullAmount" value
+            bow.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, pullAmount); ;
+            arrow.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(0, pullAmount);
+        }
+        // If player isn't holding left click anymore, shoot the arrow
+        if (Input.GetMouseButtonUp(0))
+        {
             Rigidbody _arrowRigidB = arrow.transform.GetComponent<Rigidbody>();
             ProjectileAddForce _arrowProjectile = arrow.transform.GetComponent<ProjectileAddForce>();
 
-            if (Input.GetMouseButton(0) && pullAmount < 100)
-            {
-                pullAmount += Time.deltaTime * pullSpeed;
-                Mathf.Clamp(pullAmount, 0, 100);
-            }
-            if (Input.GetMouseButtonUp(0))
-            {
-                arrowSlotted = false;
-                _arrowRigidB.isKinematic = false;
-                arrow.transform.parent = null;
-                _arrowProjectile.shootForce *= ((pullAmount / 100) + 0.05f);
-                
-                numberOfArrows -= 1;
-                pullAmount = 0;
+            _arrowRigidB.isKinematic = false;
+            arrow.transform.parent = null;
+            _arrowProjectile.shootForce *= ((pullAmount / 100) + 0.05f);
 
-                _arrowProjectile.enabled = true;
-                arrow.AddComponent<EmbedBehavior>();
+            _arrowProjectile.enabled = true;
+            arrow.AddComponent<EmbedBehavior>();
 
-                Invoke("SpawnArrow", 0.5f);
-            }
-            _bowSkin.SetBlendShapeWeight(0, pullAmount);
-            _arrowSkin.SetBlendShapeWeight(0, pullAmount);
+            arrowSlotted = false;
+            numberOfArrows -= 1;
+            pullAmount = 0;
+
+            Invoke("SpawnArrow", 0.5f);
+
+            MainPanel.UpdateNbArrowText(numberOfArrows);
         }
     }
 }

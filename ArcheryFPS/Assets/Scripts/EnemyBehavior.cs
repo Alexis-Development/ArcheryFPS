@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyBehavior : MonoBehaviour
 {
@@ -9,6 +7,8 @@ public class EnemyBehavior : MonoBehaviour
     HealthBar healthBar;
 
     int health = 200;
+    int valuePoints = 200;
+    float gravity = -30f;
 
     void Start()
     {
@@ -25,9 +25,9 @@ public class EnemyBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 distanceEnemyToPlayer = player.position - transform.position;
         transform.LookAt(player);
-        controller.SimpleMove(distanceEnemyToPlayer * Time.deltaTime * 50f);
+        Vector3 speed = transform.forward * 5;
+        controller.SimpleMove(speed);
     }
 
     public void TakeDamage(int damage)
@@ -35,6 +35,7 @@ public class EnemyBehavior : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
+            Player.UpdateScore(valuePoints);
             Destroy(gameObject);
             return;
         }

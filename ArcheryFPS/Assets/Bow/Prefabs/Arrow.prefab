@@ -79,7 +79,8 @@ SkinnedMeshRenderer:
   m_SkinnedMotionVectors: 1
   m_Mesh: {fileID: 3755354910237043173, guid: 64065b60f42de244194c4fb2a0dd4fcf, type: 3}
   m_Bones: []
-  m_BlendShapeWeights: []
+  m_BlendShapeWeights:
+  - 0
   m_RootBone: {fileID: 0}
   m_AABB:
     m_Center: {x: 0.000018119812, y: 3.68097, z: -0.35520095}
@@ -96,7 +97,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3, y: 3, z: 2.0818043}
+  m_Size: {x: 2.99, y: 2.99, z: 2.0818043}
   m_Center: {x: 0, y: 0, z: 0.5564192}
 --- !u!54 &-2512720160877563579
 Rigidbody:

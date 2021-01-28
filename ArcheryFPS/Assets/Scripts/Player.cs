@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private static Player instance;
+    static Player instance;
+    static int score = 0;
 
     void Awake()
     {
@@ -19,6 +18,11 @@ public class Player : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        MainPanel.UpdateScoreText(score);
+    }
+
     public static Player Instance
     {
         get
@@ -26,4 +30,11 @@ public class Player : MonoBehaviour
             return instance;
         }
     }
+
+    public static void UpdateScore(int points)
+    {
+        score += points;
+        MainPanel.UpdateScoreText(score);
+    }
+    
 }

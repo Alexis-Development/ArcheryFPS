@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EmbedBehavior : MonoBehaviour
 {
     Rigidbody rigidB;
+    bool embed = false;
+    int speedOfArrow = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -12,15 +12,25 @@ public class EmbedBehavior : MonoBehaviour
         rigidB = GetComponent<Rigidbody>();
     }
 
+    void Update()
+    {
+        if (!embed)
+        {
+            speedOfArrow = Mathf.RoundToInt(rigidB.velocity.magnitude);
+        }
+        Debug.Log("speed : " + speedOfArrow);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("OnCollisionEnter : " + collision.collider.name);
         GameObject target = collision.collider.gameObject;
         if (target.tag == "Enemy")
         {
+            embed = true;
             gameObject.transform.parent = target.transform;
             EnemyBehavior enemyB = target.GetComponent<EnemyBehavior>();
-            int damage = Mathf.RoundToInt(rigidB.velocity.magnitude * 2);
+            int damage = speedOfArrow * speedOfArrow / 10 + 1;
+            Debug.Log(damage);
             enemyB.TakeDamage(damage);
         }
         Embed();
