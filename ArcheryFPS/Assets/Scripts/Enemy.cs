@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
-public class EnemyBehavior : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     Transform player;
     CharacterController controller;
     HealthBar healthBar;
 
-    int health = 200;
-    int valuePoints = 200;
-    float gravity = -30f;
+    int health = 300;
+    int valuePoints = 300;
+    int strength = 30;
 
     void Start()
     {
@@ -28,6 +28,16 @@ public class EnemyBehavior : MonoBehaviour
         transform.LookAt(player);
         Vector3 speed = transform.forward * 5;
         controller.SimpleMove(speed);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("enemy collision");
+        GameObject target = other.gameObject;
+        if (target.name == "Player")
+        {
+            Player.TakeDamage(strength);
+        }
     }
 
     public void TakeDamage(int damage)

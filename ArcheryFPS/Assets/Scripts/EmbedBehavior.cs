@@ -18,20 +18,18 @@ public class EmbedBehavior : MonoBehaviour
         {
             speedOfArrow = Mathf.RoundToInt(rigidB.velocity.magnitude);
         }
-        Debug.Log("speed : " + speedOfArrow);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        GameObject target = collision.collider.gameObject;
+        GameObject target = collision.gameObject;
         if (target.tag == "Enemy")
         {
             embed = true;
             gameObject.transform.parent = target.transform;
-            EnemyBehavior enemyB = target.GetComponent<EnemyBehavior>();
             int damage = speedOfArrow * speedOfArrow / 10 + 1;
             Debug.Log(damage);
-            enemyB.TakeDamage(damage);
+            target.SendMessage("TakeDamage", damage);
         }
         Embed();
     }

@@ -40,9 +40,15 @@ public class Shoot : MonoBehaviour
         if (numberOfArrows > 0)
         {
             arrowSlotted = true;
-            arrow = Instantiate(arrowPrefab, transform.position, transform.rotation) as GameObject;
+            arrow = Instantiate(arrowPrefab, transform.position, transform.rotation);
             arrow.transform.parent = transform;
         }
+    }
+
+    public void AddArrows(int nbArrow)
+    {
+        numberOfArrows += nbArrow;
+        MainPanel.UpdateNbArrowText(numberOfArrows);
     }
 
     void ShootArrow()

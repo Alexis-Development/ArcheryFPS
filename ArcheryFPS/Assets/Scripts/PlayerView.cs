@@ -5,7 +5,7 @@ public class PlayerView : MonoBehaviour
     [SerializeField]
     Camera cam;
 
-    public float mouseSensitivity = 2000f;
+    public float mouseSensitivity;
     float xRotation = 0f;
 
     // Start is called before the first frame update
@@ -13,6 +13,7 @@ public class PlayerView : MonoBehaviour
     {
         cam = GetComponentInChildren<Camera>();
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame

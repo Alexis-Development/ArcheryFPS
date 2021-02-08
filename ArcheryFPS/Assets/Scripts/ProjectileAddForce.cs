@@ -3,7 +3,7 @@
 public class ProjectileAddForce : MonoBehaviour
 {
     Rigidbody rigidB;
-    public float shootForce = 3000f;
+    public float shootForce = 5000f;
 
     // Start is called before the first frame update
     void OnEnable()
