@@ -5,10 +5,11 @@ public class MainPanel : MonoBehaviour
 {
     private static MainPanel instance;
 
-    static Text scoreText;
-    static Text nbArrowText;
-    static Text gameOverText;
-    static HealthBar playerHealthBar;
+    private static Text scoreText;
+    private static Text nbArrowText;
+    private static Text pauseText;
+    private static Text gameOverText;
+    private static HealthBar playerHealthBar;
 
     void Awake()
     {
@@ -17,6 +18,7 @@ public class MainPanel : MonoBehaviour
             instance = this;
             scoreText = GameObject.Find("ScoreText").GetComponent<Text>();
             nbArrowText = GameObject.Find("NbArrowText").GetComponent<Text>();
+            pauseText = GameObject.Find("PauseText").GetComponent<Text>();
             gameOverText = GameObject.Find("GameOverText").GetComponent<Text>();
             playerHealthBar = GetComponentInChildren<HealthBar>();
         }
@@ -47,6 +49,16 @@ public class MainPanel : MonoBehaviour
     public static void UpdatePlayerHealthBar(int health)
     {
         playerHealthBar.SetHealth(health);
+    }
+
+    public static void ShowPauseText()
+    {
+        pauseText.enabled = true;
+    }
+
+    public static void HidePauseText()
+    {
+        pauseText.enabled = false;
     }
 
     public static void ShowGameOverText()

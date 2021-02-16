@@ -1,30 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    static Player instance;
-    public HealthBar healthBar;
+    private static Player instance;
 
-    static int score = 0;
-    static int health = 100;
+    private static int score;
+    private static int health;
 
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(this);
-        }
-    }
-
-    void Start()
-    {
-        MainPanel.UpdateScoreText(score);
-    }
+    private static bool gameIsPaused;
+    private static bool gameIsOver;
 
     public static Player Instance
     {
@@ -34,10 +19,38 @@ public class Player : MonoBehaviour
         }
     }
 
-    public static void UpdateScore(int points)
+    void Awake()
     {
-        score += points;
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
+    void Start()
+    {
+        score = 0;
+        health = 100;
+        gameIsPaused = false;
+        gameIsOver = false;
         MainPanel.UpdateScoreText(score);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseGame();
+        }
+
+        if (gameIsOver && Input.GetKeyDown(KeyCode.Space))
+        {
+            StartGame();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -48,8 +61,14 @@ public class Player : MonoBehaviour
             Debug.Log("collision with player");
             ArrowSpot arrowS = target.GetComponent<ArrowSpot>();
             int nbArrow = arrowS.ArrowPicked();
-            GetComponentInChildren<Shoot>().AddArrows(nbArrow);
+            GetComponentInChildren<Bow>().AddArrow(nbArrow);
         }
+    }
+
+    public static void UpdateScore(int points)
+    {
+        score += points;
+        MainPanel.UpdateScoreText(score);
     }
 
     public static void TakeDamage(int damage)
@@ -58,9 +77,38 @@ public class Player : MonoBehaviour
         MainPanel.UpdatePlayerHealthBar(health);
         if (health <= 0)
         {
-            MainPanel.ShowGameOverText();
-            Time.timeScale = 0;
+            EndGame();
         }
     }
+
+    private static void StartGame()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+    }
+
+    private static void PauseGame()
+    {
+        if (gameIsPaused)
+        {
+            gameIsPaused = false;
+            Time.timeScale = 1;
+            MainPanel.HidePauseText();
+        }
+        else
+        {
+            gameIsPaused = true;
+            Time.timeScale = 0;
+            MainPanel.ShowPauseText();
+        }
+    }
+
+    private static void EndGame()
+    {
+        gameIsOver = true;
+        Time.timeScale = 0;
+        MainPanel.ShowGameOverText();
+    }
+
 
 }

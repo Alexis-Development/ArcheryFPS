@@ -2,45 +2,49 @@
 
 public class PlayerMovement : MonoBehaviour
 {
-    public CharacterController controller;
+    private CharacterController controller;
 
-    public float speed = 12f;
-    public float gravity = -30f;
-    public float jumpHeight = 3f;
+    private float playerSpeed = 12.0f;
+    private float gravityValue = 30.0f;
+    private float jumpHeight = 3.0f;
 
-    Vector3 velocity;
-    bool isRunning = false;
+    private Vector3 playerVelocity;
+    private bool groundedPlayer;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        controller = GetComponent<CharacterController>();
+    }
 
     // Update is called once per frame
     void Update()
     {
+        groundedPlayer = controller.isGrounded;
+        if (groundedPlayer && playerVelocity.y < 0)
+        {
+            playerVelocity.y = 0f;
+        }
+        
         // Get position of the player and move it (key movement ZQSD)
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        Vector3 move = transform.right * x + transform.forward * z;
+        Vector3 move = transform.right * Input.GetAxis("Horizontal") + transform.forward * Input.GetAxis("Vertical");
 
         if (Input.GetButtonDown("Run"))
-        {
-            isRunning = !isRunning;
-        }
-
-        if (isRunning)
         {
             move *= 1.5f;
         }
 
-        controller.Move(move * speed * Time.deltaTime);
+        controller.Move(move * Time.deltaTime * playerSpeed);
 
         // Check jump
-        if (Input.GetButtonDown("Jump") && controller.isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && groundedPlayer)
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            playerVelocity.y = Mathf.Sqrt(jumpHeight * 2.0f * gravityValue);
         }
 
         // Apply gravity
-        velocity.y += gravity * Time.deltaTime;
+        playerVelocity.y -= gravityValue * Time.deltaTime;
 
-        controller.Move(velocity * Time.deltaTime);
+        controller.Move(playerVelocity * Time.deltaTime);
     }
 }

@@ -2,16 +2,15 @@
 
 public class PlayerView : MonoBehaviour
 {
-    [SerializeField]
-    Camera cam;
+    private Transform cam;
 
-    public float mouseSensitivity;
-    float xRotation = 0f;
+    private float mouseSensitivity = 400.0f;
+    private float xRotation = 0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        cam = GetComponentInChildren<Camera>();
+        cam = GetComponentInChildren<Camera>().transform;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -19,17 +18,11 @@ public class PlayerView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxisRaw("Mouse X") * mouseSensitivity * Time.deltaTime;
-        transform.Rotate(Vector3.up * mouseX);
-    }
-    
-    void LateUpdate()
-    {
-        float mouseY = Input.GetAxisRaw("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        transform.Rotate(Vector3.up * Input.GetAxisRaw("Mouse X") * mouseSensitivity * Time.deltaTime);
 
-        xRotation -= mouseY;
+        xRotation -= Input.GetAxisRaw("Mouse Y") * mouseSensitivity * Time.deltaTime;
         xRotation = Mathf.Clamp(xRotation, -70f, 70f);
 
-        cam.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        cam.localEulerAngles = new Vector3(xRotation, 0f, 0f);
     }
 }

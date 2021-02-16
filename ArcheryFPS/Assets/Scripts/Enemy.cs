@@ -6,9 +6,10 @@ public class Enemy : MonoBehaviour
     CharacterController controller;
     HealthBar healthBar;
 
-    int health = 300;
-    int valuePoints = 300;
+    int health = 500;
+    int valuePoints = 200;
     int strength = 30;
+    float speed = 1000f;
 
     void Start()
     {
@@ -26,13 +27,16 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         transform.LookAt(player);
-        Vector3 speed = transform.forward * 5;
-        controller.SimpleMove(speed);
+        float distance = Vector3.Distance(player.transform.position, transform.position);
+        if (distance >= 2.0f)
+        {
+            Vector3 movement = transform.forward * speed * Time.deltaTime;
+            controller.SimpleMove(movement);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("enemy collision");
         GameObject target = other.gameObject;
         if (target.name == "Player")
         {
